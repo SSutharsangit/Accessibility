@@ -4,7 +4,7 @@ import 'package:accessibility_features/accessiblity_image.dart';
 import 'package:flutter/material.dart';
 
 class MyWidget extends StatelessWidget {
-  const MyWidget({Key? key}) : super(key: key);
+  const MyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +28,11 @@ class MyWidget extends StatelessWidget {
         ),
           SizedBox(height: 20), 
        AccessibleHeadingText(
-            "Heading",
-            textColor: Colors.amber,
+            "Heading"
           ),
            AccessibleText(
-            "NormaL text",
-            textColor: Colors.amber,
+            "NormaL text"
+          
           ),
         ],
       ),
