@@ -5,25 +5,27 @@ import 'package:accessibility_features/accessibility_features.dart';
 class AccessibleText extends StatelessWidget {
   final String data;
   final TextStyle? style;
+  final double? fontSize;
+  final Color? textColor;
 
-  const AccessibleText(this.data, {super.key, this.style});
+  const AccessibleText(this.data, {super.key, this.style, this.fontSize, this.textColor});
 
   @override
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
 
     return Align(
-      alignment:accessibilitySettings.textAlignment,
+      alignment: accessibilitySettings.textAlignment,
       child: Text(
         data,
-        style: style?.copyWith(
-        fontWeight: accessibilitySettings.impairedMode ? FontWeight.bold : FontWeight.normal,
-          backgroundColor:accessibilitySettings.textBgColor,
-            fontSize: style!.fontSize! * accessibilitySettings.textScaleFactor,
-            color: accessibilitySettings.textColor,
-            height: accessibilitySettings.lineHeight,
-            letterSpacing:accessibilitySettings.letterSpacing
-            ),
+        style: (style ?? const TextStyle()).copyWith(
+          fontWeight: accessibilitySettings.impairedMode ? FontWeight.bold : FontWeight.normal,
+          backgroundColor: accessibilitySettings.textBgColor,
+          fontSize: fontSize != null ? fontSize! * accessibilitySettings.textScaleFactor : style?.fontSize,
+          color: textColor ?? accessibilitySettings.textColor,
+          height: accessibilitySettings.lineHeight,
+          letterSpacing: accessibilitySettings.letterSpacing,
+        ),
       ),
     );
   }
