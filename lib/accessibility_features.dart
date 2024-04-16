@@ -17,6 +17,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   bool _monochrome=false;
   Color _imageColor=Colors.white;
   bool _imageVisibility=true;
+  Alignment _textAlignment=Alignment.centerLeft;
 
 
   // Constructor to initialize the theme
@@ -42,6 +43,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   double get letterSpacing => _letterSpacing;
   Color get imageColor=>_imageColor;
   bool  get imageVisibility=>_imageVisibility;
+  Alignment get textAlignment=>_textAlignment;
 
   // Method to set the theme
   void setTheme(AppTheme theme) {
@@ -115,6 +117,12 @@ class AccessibilityFeatures extends ChangeNotifier {
     _headingColor = color;
     notifyListeners();
   }
+  
+  // Method to set text color
+  void setTextAlignment(Alignment align) {
+    _textAlignment = align;
+    notifyListeners();
+  }
 
   // Method to set text color
   void setTextColor(Color color) {
@@ -172,6 +180,7 @@ void decreaseLetterSpace() {
     _lineHeight = 1.0; 
     _letterSpacing= 1.0;
      _imageVisibility=true;
+   _textAlignment=Alignment.centerLeft;
     notifyListeners();
   }
 }

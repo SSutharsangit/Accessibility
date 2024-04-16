@@ -12,17 +12,20 @@ class AccessibleHeadingText extends StatelessWidget {
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
 
-    return Text(
-  data,
-  style: style?.copyWith(
-    fontWeight: accessibilitySettings.impairedMode ? FontWeight.bold : FontWeight.normal,
-    backgroundColor: accessibilitySettings.textBgColor,
-    fontSize: style!.fontSize! * accessibilitySettings.textScaleFactor * (accessibilitySettings.impairedMode ? 1.2 : 1),
-    color: accessibilitySettings.headingColor,
-    height: accessibilitySettings.lineHeight,
-    letterSpacing:accessibilitySettings.letterSpacing
-  ),
-);
+    return Align(
+      alignment:accessibilitySettings.textAlignment ,
+      child: Text(
+        data,
+        style: style?.copyWith(
+      fontWeight: accessibilitySettings.impairedMode ? FontWeight.bold : FontWeight.normal,
+      backgroundColor: accessibilitySettings.textBgColor,
+      fontSize: style!.fontSize! * accessibilitySettings.textScaleFactor * (accessibilitySettings.impairedMode ? 1.2 : 1),
+      color: accessibilitySettings.headingColor,
+      height: accessibilitySettings.lineHeight,
+      letterSpacing:accessibilitySettings.letterSpacing
+        ),
+      ),
+    );
 
   }
 }

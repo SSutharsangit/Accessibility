@@ -1,7 +1,9 @@
 import 'package:accessibility_features/accessible_heading_text.dart';
 import 'package:accessibility_features/accessible_text.dart';
 import 'package:accessibility_features/accessiblity_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:accessibility_features/accessibility_features.dart';
 import 'package:test_app/new.dart';
@@ -105,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title:  AccessibleHeadingText( accessibilitySettings.imageVisibility
                     ? 'Hide Image'
                     : 'Show Image',
-                style: TextStyle(fontSize: 20.0)),
+                style: const TextStyle(fontSize: 20.0)),
            
             trailing:  Switch(
               value: !accessibilitySettings.imageVisibility,
@@ -345,16 +347,55 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  accessibilitySettings.setTextAlignment(Alignment.centerLeft);
+                },
+                child: const Column(
+                  children: [
+                    Icon(Icons.align_horizontal_left),
+                    Text("Left Align")
+                  ],
+                ),
+              ),
+                GestureDetector(
+                    onTap: (){
+                  accessibilitySettings.setTextAlignment(Alignment.center);
+                },
+                  child: const Column(
+                    children: [
+                      Icon(Icons.align_horizontal_center),
+                        Text("center Align")
+                    ],
+                  ),
+                ),
+                   GestureDetector(
+                      onTap: (){
+                  accessibilitySettings.setTextAlignment(Alignment.centerRight);
+                },
+                     child: const Column(
+                       children: [
+                         Icon(Icons.align_horizontal_right),
+                           Text("Right Align")
+                       ],
+                     ),
+                   ),
+                
+            ],
+          ),
    GestureDetector(
   onTap: () {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MyWidget(),
+        builder: (context) => const MyWidget(),
       ),
     );
   },
-  child: Text("NEXT PAGE")
+  child: Center(child: const Text("NEXT PAGE"))
 ),
 
           ElevatedButton(
