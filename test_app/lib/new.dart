@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:accessibility_features/accessibility_features.dart';
 
 class MyWidget extends StatelessWidget {
-  const MyWidget({Key? key}) : super(key: key);
+  const MyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class MyWidget extends StatelessWidget {
               fit: BoxFit.cover, // Adjust fit as needed
             ),
             const SizedBox(height: 20),
-            AccessibleText(
+            const AccessibleText(
               "heading",
             ),
           ],

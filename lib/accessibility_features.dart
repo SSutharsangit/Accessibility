@@ -16,6 +16,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   double _letterSpacing= 1.0;
   bool _monochrome=false;
   Color _imageColor=Colors.white;
+  bool _imageVisibility=true;
 
 
   // Constructor to initialize the theme
@@ -40,6 +41,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   double get lineHeight => _lineHeight;
   double get letterSpacing => _letterSpacing;
   Color get imageColor=>_imageColor;
+  bool  get imageVisibility=>_imageVisibility;
 
   // Method to set the theme
   void setTheme(AppTheme theme) {
@@ -101,6 +103,12 @@ class AccessibilityFeatures extends ChangeNotifier {
     _textScaleFactor = _currentFontSize / 16.0; // Assuming 16.0 is the base font size
     notifyListeners(); // Notify listeners to update UI
   }
+    void hideImage() {
+    // Calculate text scale factor based on current font size
+    _imageVisibility = !_imageVisibility;// Assuming 16.0 is the base font size
+    notifyListeners(); // Notify listeners to update UI
+  }
+
 
   // Method to set heading color
   void setHeadingColor(Color color) {
@@ -160,8 +168,10 @@ void decreaseLetterSpace() {
     _textColor = Colors.black;
     _textBgColor = Colors.transparent;
     _scaldBgColor = Colors.white;
+     _imageColor= Colors.white;
     _lineHeight = 1.0; 
     _letterSpacing= 1.0;
+     _imageVisibility=true;
     notifyListeners();
   }
 }

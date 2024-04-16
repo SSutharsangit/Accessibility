@@ -28,16 +28,19 @@ class AccessibilityImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
         final accessibilitySettings = context.watch<AccessibilityFeatures>();
-    return Container(
-      child: Image(
-        image: image,
-        width: width,
-        height: height,
-        fit: fit,
-        alignment: alignment,
-        color: accessibilitySettings.imageColor,
-        colorBlendMode: colorBlendMode,
-        filterQuality: filterQuality,
+    return Visibility(
+      visible: accessibilitySettings.imageVisibility,
+      child: Container(
+        child: Image(
+          image: image,
+          width: width,
+          height: height,
+          fit: fit,
+          alignment: alignment,
+          color: accessibilitySettings.imageColor,
+          colorBlendMode: colorBlendMode,
+          filterQuality: filterQuality,
+        ),
       ),
     );
   }

@@ -100,6 +100,22 @@ class _MyHomePageState extends State<MyHomePage> {
           colorBlendMode: BlendMode.colorBurn, // Optional: Set the color blend mode
           filterQuality: FilterQuality.high, // Optional: Set the filter quality
         ),
+           
+          ListTile(
+            title:  AccessibleHeadingText( accessibilitySettings.imageVisibility
+                    ? 'Hide Image'
+                    : 'Show Image',
+                style: TextStyle(fontSize: 20.0)),
+           
+            trailing:  Switch(
+              value: !accessibilitySettings.imageVisibility,
+              onChanged: (value) {
+                accessibilitySettings.hideImage();
+                // _updateTheme(context);
+              },
+            ),
+          ), 
+          
         
           ListTile(
             title: const AccessibleHeadingText('Font Size: ',
@@ -351,24 +367,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-// class MyHomePage extends StatelessWidget {
-//   const MyHomePage({super.key});
-
-//  @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     body: Center(
-//       child: Container(
-//         width: 300,
-//         height: 400,
-//         decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(20),
-//           image: DecorationImage(
-//             image: NetworkImage('https://example.com/path/to/image.jpg'),
-//             fit: BoxFit.cover,
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }}
