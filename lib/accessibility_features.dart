@@ -15,6 +15,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   double _lineHeight = 1.0; // Default line height
   double _letterSpacing= 1.0;
   bool _monochrome=false;
+  Color _imageColor=Colors.white;
 
 
   // Constructor to initialize the theme
@@ -38,6 +39,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   Color get scaldBgColor => _scaldBgColor;
   double get lineHeight => _lineHeight;
   double get letterSpacing => _letterSpacing;
+  Color get imageColor=>_imageColor;
 
   // Method to set the theme
   void setTheme(AppTheme theme) {
@@ -77,10 +79,12 @@ class AccessibilityFeatures extends ChangeNotifier {
     // Set colors to monochrome
     _textColor = Colors.grey;
     _headingColor = Colors.grey;
+    _imageColor= Colors.grey;
   } else {
     // Reset colors to normal
     _textColor = Colors.black; 
     _headingColor = Colors.black; 
+     _imageColor= Colors.white;
   }
   notifyListeners(); // Notify listeners to update UI
 }

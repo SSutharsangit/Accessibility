@@ -1,5 +1,6 @@
 import 'package:accessibility_features/accessible_heading_text.dart';
 import 'package:accessibility_features/accessible_text.dart';
+import 'package:accessibility_features/accessiblity_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:accessibility_features/accessibility_features.dart';
@@ -89,6 +90,16 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
+          const AccessibilityImage(
+          image: AssetImage('assets/hello.png'), // Provide your image here
+          width: 200, // Optional: Set the width of the image
+          height: 200, // Optional: Set the height of the image
+          fit: BoxFit.cover, // Optional: Set the fit of the image
+          alignment: Alignment.center, // Optional: Set the alignment of the image
+           // Optional: Apply a color to the image
+          colorBlendMode: BlendMode.colorBurn, // Optional: Set the color blend mode
+          filterQuality: FilterQuality.high, // Optional: Set the filter quality
+        ),
         
           ListTile(
             title: const AccessibleHeadingText('Font Size: ',
@@ -147,7 +158,11 @@ class _MyHomePageState extends State<MyHomePage> {
             subtitle: const AccessibleText('Adjust letter Space',
                 style: TextStyle(
                   fontSize: 14.0,
-                )),
+                  color: Colors.red,
+                  
+                ),
+              
+                ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

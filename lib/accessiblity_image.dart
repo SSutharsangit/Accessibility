@@ -1,4 +1,7 @@
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:accessibility_features/accessibility_features.dart';
 
 class AccessibilityImage extends StatelessWidget {
   final ImageProvider image;
@@ -19,11 +22,12 @@ class AccessibilityImage extends StatelessWidget {
     this.color,
     this.colorBlendMode,
     this.filterQuality = FilterQuality.low,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+        final accessibilitySettings = context.watch<AccessibilityFeatures>();
     return Container(
       child: Image(
         image: image,
@@ -31,7 +35,7 @@ class AccessibilityImage extends StatelessWidget {
         height: height,
         fit: fit,
         alignment: alignment,
-        color: color,
+        color: accessibilitySettings.imageColor,
         colorBlendMode: colorBlendMode,
         filterQuality: filterQuality,
       ),
