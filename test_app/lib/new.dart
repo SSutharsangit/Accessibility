@@ -8,8 +8,6 @@ class MyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Next Page'),
@@ -17,23 +15,18 @@ class MyWidget extends StatelessWidget {
       body: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-         AccessibilityImage(
-          image: AssetImage('assets/hello.png'),
-          width: 200, 
-          height: 200, 
-          fit: BoxFit.cover, 
-          alignment: Alignment.center, 
-          colorBlendMode: BlendMode.colorBurn, 
-          filterQuality: FilterQuality.high, 
-        ),
-          SizedBox(height: 20), 
-       AccessibleHeadingText(
-            "Heading"
+          AccessibilityImage(
+            image: AssetImage('assets/hello.png'),
+            width: 200,
+            height: 200,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+            colorBlendMode: BlendMode.colorBurn,
+            filterQuality: FilterQuality.high,
           ),
-           AccessibleText(
-            "NormaL text"
-          
-          ),
+          SizedBox(height: 20),
+          AccessibleHeadingText("Heading"),
+          AccessibleText("NormaL text"),
         ],
       ),
     );
