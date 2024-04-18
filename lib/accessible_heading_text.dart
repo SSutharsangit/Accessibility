@@ -20,20 +20,12 @@ class _AccessibleHeadingTextState extends State<AccessibleHeadingText> {
   AccessibilityFeatures accessibilitySettings = AccessibilityFeatures();
   late Color headingColor;
 
-  void initState() {
-    super.initState();
-    // Initialize heading color here
-    // headingColor = widget.style?.color ?? AccessibilityFeatures().headingColor;
-    accessibilitySettings.setHeadingColor(
-        widget.style?.color ?? AccessibilityFeatures().headingColor);
-  }
-
   @override
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
     final double minFontSize = 16.0;
     final double maxFontSize = 24.0;
-    final double minLineSpace = 0.5;
+    final double minLineSpace = 0.1;
     final double maxLineSpace = 3.0;
 
     final Color? textColor = widget.style?.color;

@@ -43,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  AccessibilityFeatures accessibilityFeatures = AccessibilityFeatures();
   @override
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
@@ -64,13 +65,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     fontWeight: FontWeight.bold)),
             trailing: Switch(
               value: accessibilitySettings.colorBlindMode,
-              onChanged: accessibilitySettings.monochrome == MonochromeMode.on
-                  ? null
-                  : (value) {
+              onChanged: accessibilitySettings.monochrome == MonochromeMode.off
+                  ? (value) {
                       accessibilitySettings.toggleColorBlindMode();
-                    },
+                    }
+                  : null,
             ),
           ),
+
           ListTile(
             title: const AccessibleHeadingText(
               "Monochrome",

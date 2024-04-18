@@ -56,7 +56,7 @@ class AccessibilityFeatures extends ChangeNotifier {
 
   // Method to increase font size
   void increaseFontSize() {
-    if (_currentFontSize <= 24) {
+    if (_currentFontSize <= 26) {
       _currentFontSize += 2.0;
       updateTextScaleFactor();
     }
@@ -64,7 +64,7 @@ class AccessibilityFeatures extends ChangeNotifier {
 
   // Method to decrease font size
   void decreaseFontSize() {
-    if (_currentFontSize >= 12) {
+    if (_currentFontSize >= 11) {
       _currentFontSize -= 2.0;
       updateTextScaleFactor();
     }
@@ -78,6 +78,21 @@ class AccessibilityFeatures extends ChangeNotifier {
     _headingColor = _colorBlindMode ? Colors.white : Colors.black;
     notifyListeners(); // Notify listeners to update UI
   }
+
+  // void darkMode() {
+  //   _colorBlindMode = !_colorBlindMode;
+  //   _scaldBgColor = Colors.black;
+  //   _textColor = Colors.white;
+  //   _headingColor = Colors.white;
+  //   notifyListeners();
+  // }
+
+  // void lightMode() {
+  //   _scaldBgColor = Colors.white;
+  //   _textColor = Colors.black;
+  //   _headingColor = Colors.black;
+  //   notifyListeners();
+  // }
 
   // Method to toggle impaired mode
   void toggleimpairedMode() {
@@ -176,20 +191,24 @@ class AccessibilityFeatures extends ChangeNotifier {
   }
 
   void decreaseLineHeight() {
-    if (_lineHeight >= 0.5) {
+    if (_lineHeight > 0.5) {
       _lineHeight -= 0.1;
       notifyListeners();
     }
   }
 
   void increaseLetterSpace() {
-    _letterSpacing += 0.1;
-    notifyListeners();
+    if (_letterSpacing <= 3.0) {
+      _letterSpacing += 0.1;
+      notifyListeners();
+    }
   }
 
   void decreaseLetterSpace() {
-    _letterSpacing -= 0.1;
-    notifyListeners();
+    if (_letterSpacing > 0.1) {
+      _letterSpacing -= 0.1;
+      notifyListeners();
+    }
   }
 
   // Method to reset all settings
