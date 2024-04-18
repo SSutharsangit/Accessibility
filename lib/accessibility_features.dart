@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 enum AppTheme { light, dark, highContrast }
 
+enum MonochromeMode { off, on }
+
 class AccessibilityFeatures extends ChangeNotifier {
   AppTheme _currentTheme = AppTheme.light;
   double _currentFontSize = 16.0;
@@ -13,12 +15,12 @@ class AccessibilityFeatures extends ChangeNotifier {
   Color _textBgColor = Colors.transparent; // Default text background color
   Color _scaldBgColor = Colors.white; // Default scaffold background color
   double _lineHeight = 1.0; // Default line height
-  double _letterSpacing= 1.0;
-  bool _monochrome=false;
-  Color _imageColor=Colors.white;
-  bool _imageVisibility=true;
-  Alignment _textAlignment=Alignment.centerLeft;
-
+  double _letterSpacing = 1.0;
+  // bool _monochrome = false;
+  Color _imageColor = Colors.white;
+  bool _imageVisibility = true;
+  Alignment _textAlignment = Alignment.centerLeft;
+  MonochromeMode _monochrome = MonochromeMode.off;
 
   // Constructor to initialize the theme
   AccessibilityFeatures() {
@@ -33,7 +35,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   double get currentFontSize => _currentFontSize;
   bool get colorBlindMode => _colorBlindMode;
   bool get impairedMode => _impairedMode;
-  bool get monochrome => _monochrome;
+  MonochromeMode get monochrome => _monochrome;
   double get textScaleFactor => _textScaleFactor;
   Color get headingColor => _headingColor;
   Color get textColor => _textColor;
@@ -41,26 +43,31 @@ class AccessibilityFeatures extends ChangeNotifier {
   Color get scaldBgColor => _scaldBgColor;
   double get lineHeight => _lineHeight;
   double get letterSpacing => _letterSpacing;
-  Color get imageColor=>_imageColor;
-  bool  get imageVisibility=>_imageVisibility;
-  Alignment get textAlignment=>_textAlignment;
+  Color get imageColor => _imageColor;
+  bool get imageVisibility => _imageVisibility;
+  Alignment get textAlignment => _textAlignment;
 
   // Method to set the theme
   void setTheme(AppTheme theme) {
     _currentTheme = theme;
+    // print("_currentTheme $_currentTheme");
     notifyListeners(); // Notify listeners to update UI
   }
 
   // Method to increase font size
   void increaseFontSize() {
-    _currentFontSize += 2.0;
-    updateTextScaleFactor();
+    if (_currentFontSize <= 26) {
+      _currentFontSize += 2.0;
+      updateTextScaleFactor();
+    }
   }
 
   // Method to decrease font size
   void decreaseFontSize() {
-    _currentFontSize -= 2.0;
-    updateTextScaleFactor();
+    if (_currentFontSize >= 11) {
+      _currentFontSize -= 2.0;
+      updateTextScaleFactor();
+    }
   }
 
   // Method to toggle color blind mode
@@ -72,26 +79,59 @@ class AccessibilityFeatures extends ChangeNotifier {
     notifyListeners(); // Notify listeners to update UI
   }
 
+  // void darkMode() {
+  //   _colorBlindMode = !_colorBlindMode;
+  //   _scaldBgColor = Colors.black;
+  //   _textColor = Colors.white;
+  //   _headingColor = Colors.white;
+  //   notifyListeners();
+  // }
+
+  // void lightMode() {
+  //   _scaldBgColor = Colors.white;
+  //   _textColor = Colors.black;
+  //   _headingColor = Colors.black;
+  //   notifyListeners();
+  // }
+
   // Method to toggle impaired mode
   void toggleimpairedMode() {
     _impairedMode = !_impairedMode;
     notifyListeners(); // Notify listeners to update UI
   }
- void toggleMonochrome() {
-  _monochrome = !_monochrome;
-  if (_monochrome) {
-    // Set colors to monochrome
-    _textColor = Colors.grey;
-    _headingColor = Colors.grey;
-    _imageColor= Colors.grey;
-  } else {
-    // Reset colors to normal
-    _textColor = Colors.black; 
-    _headingColor = Colors.black; 
-     _imageColor= Colors.white;
+
+  void disableDarkMode() {
+    _currentTheme = AppTheme.light;
+    notifyListeners(); // Notify listeners to update UI
   }
-  notifyListeners(); // Notify listeners to update UI
-}
+
+  void disableLightMode() {
+    _currentTheme = AppTheme.dark;
+    notifyListeners(); // Notify listeners to update UI
+  }
+
+  void toggleMonochrome() {
+    _monochrome = _monochrome == MonochromeMode.off
+        ? MonochromeMode.on
+        : MonochromeMode.off;
+
+    final bool isMonochrome = _monochrome == MonochromeMode.on;
+    final bool isDarkTheme = _scaldBgColor == Colors.black;
+
+    if (!isMonochrome) {
+      // Set colors based on theme and monochrome mode
+      _textColor = isDarkTheme ? Colors.white : Colors.black;
+      _headingColor = isDarkTheme ? Colors.white : Colors.black;
+      _imageColor = Colors.white; // Always white in non-monochrome mode
+    } else {
+      // Set colors to grey when monochrome mode is on
+      _textColor = Colors.grey;
+      _headingColor = Colors.grey;
+      _imageColor = Colors.grey;
+    }
+
+    notifyListeners(); // Notify listeners to update UI
+  }
 
   // Method to adjust text size
   void adjustTextSize(double newTextScaleFactor) {
@@ -102,22 +142,23 @@ class AccessibilityFeatures extends ChangeNotifier {
   // Method to update text scale factor
   void updateTextScaleFactor() {
     // Calculate text scale factor based on current font size
-    _textScaleFactor = _currentFontSize / 16.0; // Assuming 16.0 is the base font size
-    notifyListeners(); // Notify listeners to update UI
-  }
-    void hideImage() {
-    // Calculate text scale factor based on current font size
-    _imageVisibility = !_imageVisibility;// Assuming 16.0 is the base font size
+    _textScaleFactor =
+        _currentFontSize / 16.0; // Assuming 16.0 is the base font size
     notifyListeners(); // Notify listeners to update UI
   }
 
+  void hideImage() {
+    // Calculate text scale factor based on current font size
+    _imageVisibility = !_imageVisibility; // Assuming 16.0 is the base font size
+    notifyListeners(); // Notify listeners to update UI
+  }
 
   // Method to set heading color
-  void setHeadingColor(Color color) {
+  setHeadingColor(Color color) {
     _headingColor = color;
     notifyListeners();
   }
-  
+
   // Method to set text color
   void setTextAlignment(Alignment align) {
     _textAlignment = align;
@@ -142,32 +183,39 @@ class AccessibilityFeatures extends ChangeNotifier {
     notifyListeners();
   }
 
- void increaseLineHeight() {
-  _lineHeight += 0.1;
-  notifyListeners();
-}
+  void increaseLineHeight() {
+    if (_lineHeight <= 3.0) {
+      _lineHeight += 0.1;
+      notifyListeners();
+    }
+  }
 
-void decreaseLineHeight() {
-  _lineHeight -= 0.1;
-  notifyListeners();
-}
- void increaseLetterSpace() {
-  _letterSpacing += 0.1;
-  notifyListeners();
-}
+  void decreaseLineHeight() {
+    if (_lineHeight > 0.5) {
+      _lineHeight -= 0.1;
+      notifyListeners();
+    }
+  }
 
-void decreaseLetterSpace() {
-  _letterSpacing -= 0.1;
-  notifyListeners();
-}
+  void increaseLetterSpace() {
+    if (_letterSpacing <= 3.0) {
+      _letterSpacing += 0.1;
+      notifyListeners();
+    }
+  }
 
-
+  void decreaseLetterSpace() {
+    if (_letterSpacing > 0.1) {
+      _letterSpacing -= 0.1;
+      notifyListeners();
+    }
+  }
 
   // Method to reset all settings
   void reset() {
     _currentTheme = AppTheme.light;
     _impairedMode = false;
-    _monochrome=false;
+    _monochrome = MonochromeMode.off;
     _currentFontSize = 16.0;
     _colorBlindMode = false;
     _textScaleFactor = 1.0;
@@ -176,11 +224,11 @@ void decreaseLetterSpace() {
     _textColor = Colors.black;
     _textBgColor = Colors.transparent;
     _scaldBgColor = Colors.white;
-     _imageColor= Colors.white;
-    _lineHeight = 1.0; 
-    _letterSpacing= 1.0;
-     _imageVisibility=true;
-   _textAlignment=Alignment.centerLeft;
+    _imageColor = Colors.white;
+    _lineHeight = 1.0;
+    _letterSpacing = 1.0;
+    _imageVisibility = true;
+    _textAlignment = Alignment.centerLeft;
     notifyListeners();
   }
 }
