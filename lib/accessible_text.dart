@@ -6,7 +6,7 @@ class AccessibleText extends StatelessWidget {
   final String data;
   final TextStyle? style;
 
-  const AccessibleText(this.data, {super.key, this.style});
+  const AccessibleText(this.data, {Key? key, this.style}) : super(key: key);
 
   final double minFontSize = 12.0;
 
@@ -18,38 +18,23 @@ class AccessibleText extends StatelessWidget {
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
 
-    final Color? textColor = style?.color;
-    final Color fallbackColor = accessibilitySettings.textColor;
-    final bool isBlackOrWhite =
-        textColor == Colors.black || textColor == Colors.white;
+    // Create a default style if `style` is null
+    const defaultStyle = TextStyle();
 
-    final Color finalColor =
-        isBlackOrWhite ? fallbackColor : textColor ?? fallbackColor;
-
-    return Align(
-      alignment: accessibilitySettings.textAlignment,
-      child: Text(
-        data,
-        style: (style ?? const TextStyle()).copyWith(
-          fontWeight: style?.fontWeight ??
-              (accessibilitySettings.impairedMode
-                  ? FontWeight.bold
-                  : FontWeight.normal),
-          backgroundColor:
-              style?.backgroundColor ?? accessibilitySettings.textBgColor,
-          fontSize: ((style?.fontSize ?? 0) *
-                      accessibilitySettings.textScaleFactor *
-                      (accessibilitySettings.impairedMode ? 1.2 : 1))
-                  .clamp(minFontSize, maxFontSize) ??
-              (accessibilitySettings.currentFontSize *
-                      accessibilitySettings.textScaleFactor *
-                      (accessibilitySettings.impairedMode ? 1.2 : 1))
-                  .clamp(minFontSize, maxFontSize),
-          color: finalColor,
-          height: accessibilitySettings.lineHeight
-              .clamp(minLineSpace, maxLineSpace),
-          letterSpacing: accessibilitySettings.letterSpacing,
-        ),
+    return Text(
+      data,
+      textAlign: accessibilitySettings.textAlignment ?? TextAlign.left,
+      style: (style ?? defaultStyle).copyWith(
+        fontWeight: accessibilitySettings.fontWeight ?? style?.fontWeight,
+        backgroundColor:
+            accessibilitySettings.textBgColor ?? style?.backgroundColor,
+        fontSize: ((accessibilitySettings.currentFontSize ?? style?.fontSize) ??
+                16.0) *
+            (accessibilitySettings.textScaleFactor ?? 1.0),
+        color: accessibilitySettings.textColor ?? style?.color,
+        height: accessibilitySettings.lineHeight ?? style?.height,
+        letterSpacing:
+            accessibilitySettings.letterSpacing ?? style?.letterSpacing,
       ),
     );
   }

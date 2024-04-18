@@ -26,9 +26,10 @@ class MyApp extends StatelessWidget {
         // Use the color blind mode to adjust the color scheme
         scaffoldBackgroundColor:
             context.watch<AccessibilityFeatures>().scaldBgColor,
-        brightness: context.watch<AccessibilityFeatures>().colorBlindMode
-            ? Brightness.dark
-            : Brightness.light,
+        brightness:
+            context.watch<AccessibilityFeatures>().colorBlindMode ?? false
+                ? Brightness.dark
+                : Brightness.light,
       ),
       home: const MyHomePage(),
     );
@@ -55,29 +56,23 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           ListTile(
             title: AccessibleHeadingText(
-                accessibilitySettings.colorBlindMode
+                accessibilitySettings.colorBlindMode ?? false
                     ? 'light mode'
                     : 'Dark mode',
-                style: const TextStyle(
-                    fontSize: 17.0,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold)),
+                style: const TextStyle(fontSize: 20.0)),
             trailing: Switch(
-              value: accessibilitySettings.colorBlindMode,
-              onChanged: accessibilitySettings.monochrome == MonochromeMode.on
-                  ? null
-                  : (value) {
-                      accessibilitySettings.toggleColorBlindMode();
-                    },
+              value: accessibilitySettings.colorBlindMode ?? false,
+              onChanged: (value) {
+                accessibilitySettings.toggleColorBlindMode();
+                // _updateTheme(context);
+              },
             ),
           ),
           ListTile(
-            title: const AccessibleHeadingText(
-              "Monochrome",
-              style: TextStyle(fontSize: 17.0),
-            ),
+            title: const AccessibleHeadingText("Monochrome",
+                style: TextStyle(fontSize: 20.0)),
             trailing: Switch(
-              value: accessibilitySettings.monochrome == MonochromeMode.on,
+              value: accessibilitySettings.monochrome ?? false,
               onChanged: (value) {
                 accessibilitySettings.toggleMonochrome();
                 // _updateTheme(context);
@@ -86,46 +81,42 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             title: const AccessibleHeadingText("Visually Impaired Mode",
-                style: TextStyle(fontSize: 17.0)),
+                style: TextStyle(fontSize: 20.0)),
             trailing: Switch(
-              value: accessibilitySettings.impairedMode,
+              value: accessibilitySettings.impairedMode ?? false,
               onChanged: (value) {
                 accessibilitySettings.toggleimpairedMode();
                 // _updateTheme(context);
               },
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
           const AccessibilityImage(
             image: AssetImage('assets/hello.png'),
-            width: 150,
-            height: 250,
+            width: 200,
+            height: 200,
             fit: BoxFit.cover,
             alignment: Alignment.center,
             colorBlendMode: BlendMode.colorBurn,
             filterQuality: FilterQuality.high,
           ),
-
           ListTile(
             title: AccessibleHeadingText(
-                accessibilitySettings.imageVisibility
-                    ? 'Hide Image'
-                    : 'Show Image',
-                style: const TextStyle(fontSize: 17.0)),
+              accessibilitySettings.showimage ?? false
+                  ? 'Hide Image'
+                  : 'Show Image',
+              style: const TextStyle(fontSize: 20.0),
+            ),
             trailing: Switch(
-              value: !accessibilitySettings.imageVisibility,
+              value: accessibilitySettings.showimage ?? false,
               onChanged: (value) {
                 accessibilitySettings.hideImage();
-                // _updateTheme(context);
               },
             ),
           ),
 
           ListTile(
             title: const AccessibleHeadingText('Font Size: ',
-                style: TextStyle(fontSize: 17.0)),
+                style: TextStyle(fontSize: 20.0)),
             subtitle: const AccessibleText('Adjust font size',
                 style: TextStyle(
                   fontSize: 14.0,
@@ -151,11 +142,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ListTile(
             title: const AccessibleHeadingText('Line Height: ',
-                style: TextStyle(fontSize: 17.0)),
+                style: TextStyle(fontSize: 20.0)),
             subtitle: const AccessibleText('Adjust line Height',
                 style: TextStyle(
-                  fontSize: 14.0,
-                )),
+                    fontSize: 30.0,
+                    color: Colors.amber,
+                    fontWeight: FontWeight.bold)),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -176,11 +168,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             title: const AccessibleHeadingText('Letter Space: ',
-                style: TextStyle(fontSize: 17.0)),
+                style: TextStyle(fontSize: 20.0)),
             subtitle: const AccessibleText(
               'Adjust letter Space',
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 30.0,
                 color: Colors.red,
               ),
             ),
@@ -206,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // color change
           ListTile(
             title: const AccessibleHeadingText('Heading Color: ',
-                style: TextStyle(fontSize: 17.0)),
+                style: TextStyle(fontSize: 20.0)),
             subtitle: const AccessibleText('Change heading color',
                 style: TextStyle(
                   fontSize: 14.0,
@@ -249,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             title: const AccessibleHeadingText('Text Color: ',
-                style: TextStyle(fontSize: 17.0)),
+                style: TextStyle(fontSize: 20.0)),
             subtitle: const AccessibleText('Change Text color',
                 style: TextStyle(
                   fontSize: 14.0,
@@ -280,9 +272,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-          ),
-          const SizedBox(
-            height: 15,
           ),
           ListTile(
             title: const AccessibleHeadingText('Text BackgroundColor: ',
@@ -318,9 +307,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
           ListTile(
             title: const AccessibleHeadingText(' Scalfold BackgroundColor: ',
                 style: TextStyle(fontSize: 15.0)),
@@ -355,15 +341,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               GestureDetector(
                 onTap: () {
-                  accessibilitySettings.setTextAlignment(Alignment.centerLeft);
+                  accessibilitySettings.setTextAlignment(TextAlign.left);
                 },
                 child: const Column(
                   children: [
@@ -374,7 +357,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  accessibilitySettings.setTextAlignment(Alignment.center);
+                  accessibilitySettings.setTextAlignment(TextAlign.center);
                 },
                 child: const Column(
                   children: [
@@ -385,7 +368,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  accessibilitySettings.setTextAlignment(Alignment.centerRight);
+                  accessibilitySettings.setTextAlignment(TextAlign.right);
                 },
                 child: const Column(
                   children: [
@@ -406,12 +389,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
               child: const Center(child: Text("NEXT PAGE"))),
-          const SizedBox(
-            height: 15,
-          ),
+
           ElevatedButton(
               onPressed: () {
                 accessibilitySettings.reset();
+                setState(() {});
               },
               child: const AccessibleText("Reset"))
         ],
