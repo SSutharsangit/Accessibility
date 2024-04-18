@@ -14,27 +14,30 @@ class MyWidget extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Next Page'),
       ),
-      body: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-         AccessibilityImage(
-          image: AssetImage('assets/hello.png'),
-          width: 200, 
-          height: 200, 
-          fit: BoxFit.cover, 
-          alignment: Alignment.center, 
-          colorBlendMode: BlendMode.colorBurn, 
-          filterQuality: FilterQuality.high, 
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+           AccessibilityImage(
+            image: AssetImage('assets/hello.png'),
+            width: 200, 
+            height: 200, 
+            fit: BoxFit.cover, 
+            alignment: Alignment.center, 
+            colorBlendMode: BlendMode.colorBurn, 
+            filterQuality: FilterQuality.high, 
+          ),
+            SizedBox(height: 20), 
+         AccessibleHeadingText(
+              "Heading"
+            ),
+             AccessibleText(
+              "NormaL text"
+            
+            ),
+          ],
         ),
-          SizedBox(height: 20), 
-       AccessibleHeadingText(
-            "Heading"
-          ),
-           AccessibleText(
-            "NormaL text"
-          
-          ),
-        ],
       ),
     );
   }
