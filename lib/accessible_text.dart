@@ -19,37 +19,35 @@ class AccessibleText extends StatelessWidget {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
 
     final Color? textColor = style?.color;
-    final Color fallbackColor = accessibilitySettings.textColor;
+    final Color? fallbackColor = accessibilitySettings.textColor;
     final bool isBlackOrWhite =
         textColor == Colors.black || textColor == Colors.white;
 
-    final Color finalColor =
+    final Color? finalColor =
         isBlackOrWhite ? fallbackColor : textColor ?? fallbackColor;
 
-    return Align(
-      alignment: accessibilitySettings.textAlignment,
-      child: Text(
-        data,
-        style: (style ?? const TextStyle()).copyWith(
-          fontWeight: style?.fontWeight ??
-              (accessibilitySettings.impairedMode
-                  ? FontWeight.bold
-                  : FontWeight.normal),
-          backgroundColor:
-              style?.backgroundColor ?? accessibilitySettings.textBgColor,
-          fontSize: ((style?.fontSize ?? 0) *
-                      accessibilitySettings.textScaleFactor *
-                      (accessibilitySettings.impairedMode ? 1.2 : 1))
-                  .clamp(minFontSize, maxFontSize) ??
-              (accessibilitySettings.currentFontSize *
-                      accessibilitySettings.textScaleFactor *
-                      (accessibilitySettings.impairedMode ? 1.2 : 1))
-                  .clamp(minFontSize, maxFontSize),
-          color: finalColor,
-          height: accessibilitySettings.lineHeight
-              .clamp(minLineSpace, maxLineSpace),
-          letterSpacing: accessibilitySettings.letterSpacing,
-        ),
+    return Text(
+      data,
+      textAlign: accessibilitySettings.textAlignment,
+      style: (style ?? const TextStyle()).copyWith(
+        fontWeight: style?.fontWeight ??
+            (accessibilitySettings.impairedMode
+                ? FontWeight.bold
+                : FontWeight.normal),
+        backgroundColor:
+            style?.backgroundColor ?? accessibilitySettings.textBgColor,
+        fontSize: ((style?.fontSize ?? 0) *
+                    accessibilitySettings.textScaleFactor *
+                    (accessibilitySettings.impairedMode ? 1.2 : 1))
+                .clamp(minFontSize, maxFontSize) ??
+            (accessibilitySettings.currentFontSize *
+                    accessibilitySettings.textScaleFactor *
+                    (accessibilitySettings.impairedMode ? 1.2 : 1))
+                .clamp(minFontSize, maxFontSize),
+        color: finalColor,
+        height:
+            accessibilitySettings.lineHeight.clamp(minLineSpace, maxLineSpace),
+        letterSpacing: accessibilitySettings.letterSpacing,
       ),
     );
   }
