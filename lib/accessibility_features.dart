@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppTheme { light, dark, highContrast }
 
@@ -10,8 +11,8 @@ class AccessibilityFeatures extends ChangeNotifier {
   bool _colorBlindMode = false;
   bool _impairedMode = false;
   double _textScaleFactor = 1.0;
-  Color _headingColor = Colors.black; // Default heading color
-  Color _textColor = Colors.black; // Default text color
+  Color? _headingColor; // Default heading color
+  Color? _textColor; // Default text color
   Color _textBgColor = Colors.transparent; // Default text background color
   Color _scaldBgColor = Colors.white; // Default scaffold background color
   double _lineHeight = 1.0; // Default line height
@@ -19,8 +20,13 @@ class AccessibilityFeatures extends ChangeNotifier {
   // bool _monochrome = false;
   Color _imageColor = Colors.white;
   bool _imageVisibility = true;
-  Alignment _textAlignment = Alignment.centerLeft;
+  TextAlign _textAlignment = TextAlign.left;
   MonochromeMode _monochrome = MonochromeMode.off;
+  // ThemeMode _theme = ThemeMode.light;
+  bool _isDark = false;
+  bool get isDark => _isDark;
+
+  SharedPreferences? storage;
 
   // Constructor to initialize the theme
   AccessibilityFeatures() {
@@ -30,6 +36,40 @@ class AccessibilityFeatures extends ChangeNotifier {
     _textScaleFactor = 1.0;
   }
 
+  final darkTheme = ThemeData(
+    primaryColor: Colors.black,
+    brightness: Brightness.dark,
+    primaryColorDark: Colors.black,
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.white),
+    ),
+  );
+
+  final lightTheme = ThemeData(
+    primaryColor: Colors.white,
+    brightness: Brightness.light,
+    primaryColorDark: Colors.white,
+    textTheme: const TextTheme(
+      bodyLarge: TextStyle(color: Colors.black),
+    ),
+  );
+
+  changeTheme() {
+    _isDark = !isDark;
+    //Save the value to secure storage
+    storage?.setBool("isDark", _isDark);
+    notifyListeners();
+  }
+
+  //Init method of provider
+  init() async {
+    //After we re run the app
+    storage = await SharedPreferences.getInstance();
+    _isDark = storage?.getBool("isDark") ?? false;
+
+    notifyListeners();
+  }
+
   // Getter methods for accessing properties
   AppTheme get currentTheme => _currentTheme;
   double get currentFontSize => _currentFontSize;
@@ -37,15 +77,16 @@ class AccessibilityFeatures extends ChangeNotifier {
   bool get impairedMode => _impairedMode;
   MonochromeMode get monochrome => _monochrome;
   double get textScaleFactor => _textScaleFactor;
-  Color get headingColor => _headingColor;
-  Color get textColor => _textColor;
+  Color? get headingColor => _headingColor;
+  Color? get textColor => _textColor;
   Color get textBgColor => _textBgColor;
   Color get scaldBgColor => _scaldBgColor;
   double get lineHeight => _lineHeight;
   double get letterSpacing => _letterSpacing;
   Color get imageColor => _imageColor;
   bool get imageVisibility => _imageVisibility;
-  Alignment get textAlignment => _textAlignment;
+  TextAlign get textAlignment => _textAlignment;
+  // ThemeMode get theme => _theme;
 
   // Method to set the theme
   void setTheme(AppTheme theme) {
@@ -53,6 +94,11 @@ class AccessibilityFeatures extends ChangeNotifier {
     // print("_currentTheme $_currentTheme");
     notifyListeners(); // Notify listeners to update UI
   }
+
+  ThemeData lightMode = ThemeData(
+    brightness: Brightness.light,
+  );
+  ThemeData darkMode = ThemeData(brightness: Brightness.dark);
 
   // Method to increase font size
   void increaseFontSize() {
@@ -71,13 +117,15 @@ class AccessibilityFeatures extends ChangeNotifier {
   }
 
   // Method to toggle color blind mode
-  void toggleColorBlindMode() {
-    _colorBlindMode = !_colorBlindMode;
-    _scaldBgColor = _colorBlindMode ? Colors.black : Colors.white;
-    _textColor = _colorBlindMode ? Colors.white : Colors.black;
-    _headingColor = _colorBlindMode ? Colors.white : Colors.black;
-    notifyListeners(); // Notify listeners to update UI
-  }
+  // void toggleColorBlindMode() {
+  //   _colorBlindMode = !_colorBlindMode;
+  //   _scaldBgColor = _colorBlindMode ? Colors.black : Colors.white;
+  //   // _theme = _colorBlindMode ? ThemeMode.light : ThemeMode.dark;
+  //   _textColor = _colorBlindMode ? Colors.white : Colors.black;
+  //   _headingColor = _colorBlindMode ? Colors.white : Colors.black;
+
+  //   notifyListeners(); // Notify listeners to update UI
+  // }
 
   // void darkMode() {
   //   _colorBlindMode = !_colorBlindMode;
@@ -116,12 +164,12 @@ class AccessibilityFeatures extends ChangeNotifier {
         : MonochromeMode.off;
 
     final bool isMonochrome = _monochrome == MonochromeMode.on;
-    final bool isDarkTheme = _scaldBgColor == Colors.black;
+    final bool isDark = _scaldBgColor == Colors.black;
 
     if (!isMonochrome) {
       // Set colors based on theme and monochrome mode
-      _textColor = isDarkTheme ? Colors.white : Colors.black;
-      _headingColor = isDarkTheme ? Colors.white : Colors.black;
+      _textColor = isDark ? Colors.white : Colors.black;
+      _headingColor = isDark ? Colors.white : Colors.black;
       _imageColor = Colors.white; // Always white in non-monochrome mode
     } else {
       // Set colors to grey when monochrome mode is on
@@ -160,7 +208,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   }
 
   // Method to set text color
-  void setTextAlignment(Alignment align) {
+  void setTextAlignment(TextAlign align) {
     _textAlignment = align;
     notifyListeners();
   }
@@ -220,15 +268,20 @@ class AccessibilityFeatures extends ChangeNotifier {
     _colorBlindMode = false;
     _textScaleFactor = 1.0;
     _textBgColor = Colors.transparent;
-    _headingColor = Colors.black;
-    _textColor = Colors.black;
     _textBgColor = Colors.transparent;
     _scaldBgColor = Colors.white;
     _imageColor = Colors.white;
     _lineHeight = 1.0;
     _letterSpacing = 1.0;
     _imageVisibility = true;
-    _textAlignment = Alignment.centerLeft;
+    _textAlignment = TextAlign.left;
+    if (!isDark) {
+      _headingColor = Colors.black;
+      _textColor = Colors.black;
+    } else {
+      _headingColor = Colors.white;
+      _textColor = Colors.white;
+    }
     notifyListeners();
   }
 }

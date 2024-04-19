@@ -4,33 +4,35 @@ import 'package:accessibility_features/accessible_text.dart';
 import 'package:accessibility_features/accessiblity_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:test_app/colorpicker.dart';
 import 'package:test_app/new.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AccessibilityFeatures(),
+      create: (context) => AccessibilityFeatures()..init(),
       child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Accessibility Features Demo',
-      theme: ThemeData(
-        // Use the color blind mode to adjust the color scheme
-        scaffoldBackgroundColor:
-            context.watch<AccessibilityFeatures>().scaldBgColor,
-        brightness: context.watch<AccessibilityFeatures>().colorBlindMode
-            ? Brightness.dark
-            : Brightness.light,
-      ),
-      home: const MyHomePage(),
+    return Consumer<AccessibilityFeatures>(
+      builder: (context, accessibilitySettings, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Accessibility Features',
+          themeMode:
+              accessibilitySettings.isDark ? ThemeMode.dark : ThemeMode.light,
+          darkTheme: accessibilitySettings.darkTheme,
+          theme: accessibilitySettings.lightTheme,
+          home: const MyHomePage(),
+        );
+      },
     );
   }
 }
@@ -44,6 +46,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   AccessibilityFeatures accessibilityFeatures = AccessibilityFeatures();
+
   @override
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
@@ -64,10 +67,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.red,
                     fontWeight: FontWeight.bold)),
             trailing: Switch(
-              value: accessibilitySettings.colorBlindMode,
+              value: accessibilitySettings.isDark,
               onChanged: accessibilitySettings.monochrome == MonochromeMode.off
                   ? (value) {
-                      accessibilitySettings.toggleColorBlindMode();
+                      accessibilitySettings.changeTheme();
                     }
                   : null,
             ),
@@ -236,15 +239,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       accessibilitySettings.setHeadingColor(Colors.green);
                     },
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.color_lens,
-                      color: Colors.blue,
-                    ),
-                    onPressed: () {
-                      accessibilitySettings.setHeadingColor(Colors.blue);
+                  ColorPickerIconButton(
+                    key: UniqueKey(),
+                    title: "heading",
+                    onPressed: (Color selectedColor, String heading) {
+                      // Your onPressed callback logic here
+                      accessibilitySettings.setHeadingColor(selectedColor);
                     },
-                  ),
+                  )
                 ],
               ),
             ),
@@ -273,12 +275,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       accessibilitySettings.setTextColor(Colors.green);
                     },
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.color_lens, color: Colors.blue),
-                    onPressed: () {
-                      accessibilitySettings.setTextColor(Colors.blue);
+                  ColorPickerIconButton(
+                    key: UniqueKey(),
+                    title: "text",
+                    onPressed: (Color selectedColor, String text) {
+                      // Your onPressed callback logic here
+                      accessibilitySettings.setTextColor(selectedColor);
                     },
-                  ),
+                  )
                 ],
               ),
             ),
@@ -310,12 +314,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       accessibilitySettings.setTextBgColor(Colors.green);
                     },
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.color_lens, color: Colors.blue),
-                    onPressed: () {
-                      accessibilitySettings.setTextBgColor(Colors.blue);
+                  ColorPickerIconButton(
+                    key: UniqueKey(),
+                    title: "textBackground",
+                    onPressed: (Color selectedColor, String textBackground) {
+                      // Your onPressed callback logic here
+                      accessibilitySettings.setTextBgColor(selectedColor);
                     },
-                  ),
+                  )
                 ],
               ),
             ),
@@ -347,12 +353,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       accessibilitySettings.setScalfoldColor(Colors.green);
                     },
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.color_lens, color: Colors.blue),
-                    onPressed: () {
-                      accessibilitySettings.setScalfoldColor(Colors.blue);
+                  ColorPickerIconButton(
+                    key: UniqueKey(),
+                    title: "background",
+                    onPressed: (Color selectedColor, String background) {
+                      // Your onPressed callback logic here
+                      accessibilitySettings.setScalfoldColor(selectedColor);
                     },
-                  ),
+                  )
                 ],
               ),
             ),
@@ -365,7 +373,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  accessibilitySettings.setTextAlignment(Alignment.centerLeft);
+                  accessibilitySettings.setTextAlignment(TextAlign.left);
                 },
                 child: const Column(
                   children: [
@@ -376,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  accessibilitySettings.setTextAlignment(Alignment.center);
+                  accessibilitySettings.setTextAlignment(TextAlign.center);
                 },
                 child: const Column(
                   children: [
@@ -387,7 +395,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  accessibilitySettings.setTextAlignment(Alignment.centerRight);
+                  accessibilitySettings.setTextAlignment(TextAlign.right);
                 },
                 child: const Column(
                   children: [

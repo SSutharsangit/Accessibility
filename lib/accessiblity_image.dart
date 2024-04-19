@@ -1,7 +1,6 @@
-
+import 'package:accessibility_features/accessibility_features.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:accessibility_features/accessibility_features.dart';
 
 class AccessibilityImage extends StatelessWidget {
   final ImageProvider image;
@@ -27,7 +26,7 @@ class AccessibilityImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final accessibilitySettings = context.watch<AccessibilityFeatures>();
+    final accessibilitySettings = context.watch<AccessibilityFeatures>();
     return Visibility(
       visible: accessibilitySettings.imageVisibility,
       child: Container(
