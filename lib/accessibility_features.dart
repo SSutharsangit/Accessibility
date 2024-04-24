@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,12 +18,11 @@ class AccessibilityFeatures extends ChangeNotifier {
   Color _scaldBgColor = Colors.white; // Default scaffold background color
   double _lineHeight = 1.0; // Default line height
   double _letterSpacing = 1.0;
-  // bool _monochrome = false;
   Color _imageColor = Colors.white;
   bool _imageVisibility = true;
   TextAlign _textAlignment = TextAlign.left;
   MonochromeMode _monochrome = MonochromeMode.off;
-  // ThemeMode _theme = ThemeMode.light;
+  bool _systemMode = false;
   bool _isDark = false;
   bool get isDark => _isDark;
 
@@ -56,8 +56,10 @@ class AccessibilityFeatures extends ChangeNotifier {
 
   changeTheme() {
     _isDark = !isDark;
-    //Save the value to secure storage
     storage?.setBool("isDark", _isDark);
+    _textColor = _isDark ? Colors.white : Colors.black;
+    _headingColor = isDark ? Colors.white : Colors.black;
+    _imageColor = Colors.white;
     notifyListeners();
   }
 
@@ -66,6 +68,7 @@ class AccessibilityFeatures extends ChangeNotifier {
     //After we re run the app
     storage = await SharedPreferences.getInstance();
     _isDark = storage?.getBool("isDark") ?? false;
+    _systemMode = storage?.getBool("isSystem") ?? false;
 
     notifyListeners();
   }
@@ -86,14 +89,15 @@ class AccessibilityFeatures extends ChangeNotifier {
   Color get imageColor => _imageColor;
   bool get imageVisibility => _imageVisibility;
   TextAlign get textAlignment => _textAlignment;
+  bool get systemMode => _systemMode;
   // ThemeMode get theme => _theme;
 
   // Method to set the theme
-  void setTheme(AppTheme theme) {
-    _currentTheme = theme;
-    // print("_currentTheme $_currentTheme");
-    notifyListeners(); // Notify listeners to update UI
-  }
+  // void setTheme(AppTheme theme) {
+  //   _currentTheme = theme;
+  //   // print("_currentTheme $_currentTheme");
+  //   notifyListeners(); // Notify listeners to update UI
+  // }
 
   ThemeData lightMode = ThemeData(
     brightness: Brightness.light,
@@ -163,22 +167,53 @@ class AccessibilityFeatures extends ChangeNotifier {
         ? MonochromeMode.on
         : MonochromeMode.off;
 
-    final bool isMonochrome = _monochrome == MonochromeMode.on;
-    final bool isDark = _scaldBgColor == Colors.black;
-
-    if (!isMonochrome) {
-      // Set colors based on theme and monochrome mode
-      _textColor = isDark ? Colors.white : Colors.black;
-      _headingColor = isDark ? Colors.white : Colors.black;
-      _imageColor = Colors.white; // Always white in non-monochrome mode
-    } else {
+    if (_monochrome == MonochromeMode.on) {
       // Set colors to grey when monochrome mode is on
       _textColor = Colors.grey;
       _headingColor = Colors.grey;
       _imageColor = Colors.grey;
+    } else if (systemMode == true) {
+      final Brightness brightness =
+          PlatformDispatcher.instance.platformBrightness;
+      // brightness == Brightness.dark;
+      if (brightness == Brightness.dark) {
+        _textColor = Colors.white;
+        _headingColor = Colors.white;
+      } else {
+        _textColor = Colors.black;
+        _headingColor = Colors.black;
+      }
+    } else {
+      // Set colors based on theme when monochrome mode is off
+      _textColor = _isDark ? Colors.white : Colors.black;
+      _headingColor = _isDark ? Colors.white : Colors.black;
+      _imageColor = Colors.white; // Always white in non-monochrome mode
     }
+    storage?.setBool("isDark", _isDark);
+    notifyListeners();
+  }
 
-    notifyListeners(); // Notify listeners to update UI
+  void toggleSystem() {
+    _systemMode = !_systemMode; // Toggle system mode
+    if (_systemMode) {
+      // If system mode is on, adjust theme mode based on system brightness
+      final Brightness brightness =
+          PlatformDispatcher.instance.platformBrightness;
+      // brightness == Brightness.dark;
+      if (brightness == Brightness.dark) {
+        _textColor = Colors.white;
+        _headingColor = Colors.white;
+      } else {
+        _textColor = Colors.black;
+        _headingColor = Colors.black;
+      }
+    } else {
+      // If system mode is off, set text and heading colors based on current theme
+      _textColor = _isDark ? Colors.white : Colors.black;
+      _headingColor = _isDark ? Colors.white : Colors.black;
+    }
+    storage?.setBool("isSystem", _systemMode);
+    notifyListeners();
   }
 
   // Method to adjust text size
