@@ -25,7 +25,9 @@ class _AccessibleHeadingTextState extends State<AccessibleHeadingText> {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
 
     final Color? textColor = widget.style?.color;
-    final Color? fallbackColor = accessibilitySettings.headingColor;
+    final Color? fallbackColor =
+        accessibilitySettings.stringToColor(accessibilitySettings.headingColor);
+
     final bool isBlackOrWhite =
         textColor == Colors.black || textColor == Colors.white;
 

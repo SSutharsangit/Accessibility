@@ -19,7 +19,9 @@ class AccessibleText extends StatelessWidget {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
 
     final Color? textColor = style?.color;
-    final Color? fallbackColor = accessibilitySettings.textColor;
+    final Color? fallbackColor =
+        accessibilitySettings.stringToColor(accessibilitySettings.textColor);
+
     final bool isBlackOrWhite =
         textColor == Colors.black || textColor == Colors.white;
 
