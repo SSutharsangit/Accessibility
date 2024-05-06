@@ -1,7 +1,5 @@
-import 'package:accessibility_features/accessibility_features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:provider/provider.dart';
 
 class ColorPickerIconButton extends StatefulWidget {
   final Function(Color, String) onPressed;
@@ -22,7 +20,7 @@ class _ColorPickerIconButtonState extends State<ColorPickerIconButton> {
 
   @override
   Widget build(BuildContext context) {
-    final accessibilitySettings = context.watch<AccessibilityFeatures>();
+    // final accessibilitySettings = context.watch<AccessibilityFeatures>();
     return IconButton(
       icon: const Icon(Icons.color_lens, color: Colors.blue),
       onPressed: () {
@@ -40,7 +38,6 @@ class _ColorPickerIconButtonState extends State<ColorPickerIconButton> {
                       selectedColor = color;
                     });
                   },
-                  showLabel: true,
                   pickerAreaHeightPercent: 0.8,
                 ),
               ),

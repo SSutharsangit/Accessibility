@@ -4,10 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppTheme { light, dark, highContrast }
 
-enum MonochromeMode { off, on }
+// enum MonochromeMode { off, on }
 
 class AccessibilityFeatures extends ChangeNotifier {
-  AppTheme _currentTheme = AppTheme.light;
+  // AppTheme _currentTheme = AppTheme.light;
   double _currentFontSize = 16.0;
   bool _colorBlindMode = false;
   bool _impairedMode = false;
@@ -21,7 +21,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   Color? _imageColor = Colors.white;
   bool _imageVisibility = true;
   TextAlign _textAlignment = TextAlign.left;
-  MonochromeMode _monochrome = MonochromeMode.off;
+  bool _monochrome = false;
   bool _systemMode = false;
   bool _isDark = false;
   String? _originalTextColor;
@@ -31,11 +31,11 @@ class AccessibilityFeatures extends ChangeNotifier {
   SharedPreferences? storage;
 
   // Getter methods for accessing properties
-  AppTheme get currentTheme => _currentTheme;
+  // AppTheme get currentTheme => _currentTheme;
   double get currentFontSize => _currentFontSize;
   bool get colorBlindMode => _colorBlindMode;
   bool get impairedMode => _impairedMode;
-  MonochromeMode get monochrome => _monochrome;
+  bool get monochrome => _monochrome;
   double get textScaleFactor => _textScaleFactor;
   String? get headingColor => _headingColor;
   String? get textColor => _textColor;
@@ -54,9 +54,9 @@ class AccessibilityFeatures extends ChangeNotifier {
 
   // Constructor to initialize the theme
   AccessibilityFeatures() {
-    _currentTheme = AppTheme.light;
+    // _currentTheme = AppTheme.light;
     _currentFontSize = 16.0;
-    _colorBlindMode = false;
+    // _colorBlindMode = false;
     _textScaleFactor = 1.0;
     _originalImageColor = Colors.white.value.toString();
   }
@@ -88,11 +88,34 @@ class AccessibilityFeatures extends ChangeNotifier {
 
   //Init method of provider
   init() async {
-    //After we re run the app
+    // After we re run the appS
     storage = await SharedPreferences.getInstance();
     _isDark = storage?.getBool("isDark") ?? false;
     _systemMode = storage?.getBool("isSystem") ?? false;
-    _imageVisibility = storage?.getBool("imageVisibility") ?? false;
+    _imageVisibility = storage?.getBool("imageVisibility") ?? true;
+    _headingColor = storage?.getString("headingColor");
+    _textColor = storage?.getString("textColor");
+    _impairedMode = storage?.getBool("impairedMode") ?? false;
+    _lineHeight = 1.0; // Use a default value
+
+    _letterSpacing = storage!.getDouble("letterSpacing") ?? 1.0;
+    _lineHeight = storage!.getDouble("lineHeight") ?? 1.0;
+    _currentFontSize = storage!.getDouble("currentFontSize") ?? 16.0;
+    _monochrome = storage?.getBool("monochrome") ?? false;
+
+    // final db = await AccessibilityDatasource.getDB();
+    // final settings = await AccessibilityDatasource.getAllAccessibility();
+    // if (settings != null && settings.isNotEmpty) {
+    //   final accessibilityModel = settings.first;
+    //   _currentFontSize = accessibilityModel.currentFontSize ?? 16.0;
+    //   _colorBlindMode = accessibilityModel.colorBlindMode ?? false;
+    //   _textScaleFactor = accessibilityModel.textScaleFactor ?? 1.0;
+    //   // _monochrome = accessibilityModel.monochrome ?? MonochromeMode.off;
+    //   _originalTextColor = accessibilityModel.originalTextColor;
+    //   _originalHeadingColor = accessibilityModel.originalHeadingColor;
+    //   _originalImageColor = accessibilityModel.originalImageColor;
+    // }S
+
     notifyListeners();
   }
 
@@ -109,14 +132,6 @@ class AccessibilityFeatures extends ChangeNotifier {
     }
     return color.value.toString();
   }
-  // ThemeMode get theme => _theme;
-
-  // Method to set the theme
-  // void setTheme(AppTheme theme) {
-  //   _currentTheme = theme;
-  //   // print("_currentTheme $_currentTheme");
-  //   notifyListeners(); // Notify listeners to update UI
-  // }
 
   ThemeData lightMode = ThemeData(
     brightness: Brightness.light,
@@ -127,6 +142,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   void increaseFontSize() {
     if (_currentFontSize <= 26) {
       _currentFontSize += 2.0;
+
       updateTextScaleFactor();
     }
   }
@@ -139,54 +155,17 @@ class AccessibilityFeatures extends ChangeNotifier {
     }
   }
 
-  // Method to toggle color blind mode
-  // void toggleColorBlindMode() {
-  //   _colorBlindMode = !_colorBlindMode;
-  //   _scaldBgColor = _colorBlindMode ? Colors.black : Colors.white;
-  //   // _theme = _colorBlindMode ? ThemeMode.light : ThemeMode.dark;
-  //   _textColor = _colorBlindMode ? Colors.white : Colors.black;
-  //   _headingColor = _colorBlindMode ? Colors.white : Colors.black;
-
-  //   notifyListeners(); // Notify listeners to update UI
-  // }
-
-  // void darkMode() {
-  //   _colorBlindMode = !_colorBlindMode;
-  //   _scaldBgColor = Colors.black;
-  //   _textColor = Colors.white;
-  //   _headingColor = Colors.white;
-  //   notifyListeners();
-  // }
-
-  // void lightMode() {
-  //   _scaldBgColor = Colors.white;
-  //   _textColor = Colors.black;
-  //   _headingColor = Colors.black;
-  //   notifyListeners();
-  // }
-
   // Method to toggle impaired mode
   void toggleimpairedMode() {
     _impairedMode = !_impairedMode;
-    notifyListeners(); // Notify listeners to update UI
-  }
-
-  void disableDarkMode() {
-    _currentTheme = AppTheme.light;
-    notifyListeners(); // Notify listeners to update UI
-  }
-
-  void disableLightMode() {
-    _currentTheme = AppTheme.dark;
+    storage!.setBool("impairedMode", _impairedMode);
     notifyListeners(); // Notify listeners to update UI
   }
 
   void toggleMonochrome() {
-    _monochrome = _monochrome == MonochromeMode.off
-        ? MonochromeMode.on
-        : MonochromeMode.off;
+    _monochrome = !_monochrome;
 
-    if (_monochrome == MonochromeMode.on) {
+    if (_monochrome) {
       // Store original colors before switching to monochrome mode
       _originalTextColor = _textColor;
       _originalHeadingColor = _headingColor;
@@ -196,14 +175,27 @@ class AccessibilityFeatures extends ChangeNotifier {
       _textColor = Colors.grey.value.toString();
       _headingColor = Colors.grey.value.toString();
       _imageColor = Colors.grey;
+      if (_headingColor != null) {
+        storage!.setString("headingColor", _headingColor!);
+      }
+      if (_textColor != null) {
+        storage!.setString("textColor", _textColor!);
+      }
     } else {
       // Restore original colors when turning off monochrome mode
       _textColor = _originalTextColor;
       _headingColor = _originalHeadingColor;
       _imageColor = stringToColor(_originalImageColor);
+      if (_headingColor != null) {
+        storage!.setString("headingColor", _headingColor!);
+      }
+      if (_textColor != null) {
+        storage!.setString("textColor", _textColor!);
+      }
     }
 
-    storage?.setBool("isDark", _isDark);
+    storage?.setBool("monochrome", _monochrome);
+
     notifyListeners();
   }
 
@@ -211,8 +203,8 @@ class AccessibilityFeatures extends ChangeNotifier {
     _systemMode = !_systemMode; // Toggle system mode
     if (_systemMode) {
       // If system mode is on, adjust theme mode based on system brightness
-      final Brightness brightness =
-          PlatformDispatcher.instance.platformBrightness;
+      // final Brightness brightness =
+      PlatformDispatcher.instance.platformBrightness;
     }
     storage?.setBool("isSystem", _systemMode);
     notifyListeners();
@@ -230,7 +222,7 @@ class AccessibilityFeatures extends ChangeNotifier {
     // Calculate text scale factor based on current font size
     _textScaleFactor =
         _currentFontSize / 16.0; // Assuming 16.0 is the base font size
-    storage?.setDouble("_textScaleFactor", _textScaleFactor);
+    storage?.setDouble("currentFontSize", _currentFontSize);
     notifyListeners(); // Notify listeners to update UI
   }
 
@@ -244,6 +236,12 @@ class AccessibilityFeatures extends ChangeNotifier {
   // Method to set heading color
   void setHeadingColor(Color color) {
     _headingColor = color.value.toString(); // Convert Color to string
+    if (_headingColor != null) {
+      storage!.setString("headingColor", _headingColor!);
+    } else {
+      // Handle the case where _headingColor or storage is null
+      // For example, you could assign a default value or handle the error
+    }
     notifyListeners();
   }
 
@@ -256,12 +254,19 @@ class AccessibilityFeatures extends ChangeNotifier {
   // Method to set text color
   void setTextColor(Color color) {
     _textColor = color.value.toString(); // Convert Color to string
+    if (_textColor != null) {
+      storage!.setString("textColor", _textColor!);
+    } else {
+      // Handle the case where _headingColor or storage is null
+      // For example, you could assign a default value or handle the error
+    }
     notifyListeners();
   }
 
   // Method to set text background color
   void setTextBgColor(Color color) {
     _textBgColor = color;
+
     notifyListeners();
   }
 
@@ -271,16 +276,20 @@ class AccessibilityFeatures extends ChangeNotifier {
     notifyListeners();
   }
 
-  void increaseLineHeight() {
+  void increaseLineHeight() async {
     if (_lineHeight <= 3.0) {
       _lineHeight += 0.1;
+      storage?.setDouble("lineHeight", _lineHeight);
+
       notifyListeners();
     }
   }
 
-  void decreaseLineHeight() {
+  void decreaseLineHeight() async {
     if (_lineHeight > 0.5) {
       _lineHeight -= 0.1;
+      storage?.setDouble("lineHeight", _lineHeight);
+
       notifyListeners();
     }
   }
@@ -288,6 +297,7 @@ class AccessibilityFeatures extends ChangeNotifier {
   void increaseLetterSpace() {
     if (_letterSpacing <= 3.0) {
       _letterSpacing += 0.1;
+      storage!.setDouble("letterSpacing", _letterSpacing);
       notifyListeners();
     }
   }
@@ -295,15 +305,16 @@ class AccessibilityFeatures extends ChangeNotifier {
   void decreaseLetterSpace() {
     if (_letterSpacing > 0.1) {
       _letterSpacing -= 0.1;
+      storage!.setDouble("letterSpacing", _letterSpacing);
       notifyListeners();
     }
   }
 
   // Method to reset all settings
   void reset() {
-    _currentTheme = AppTheme.light;
+    // _currentTheme = AppTheme.light;
     _impairedMode = false;
-    _monochrome = MonochromeMode.off;
+    _monochrome = false;
     _currentFontSize = 16.0;
     _colorBlindMode = false;
     _textScaleFactor = 1.0;
@@ -319,6 +330,15 @@ class AccessibilityFeatures extends ChangeNotifier {
     _systemMode = false;
     _headingColor = null;
     _textColor = null;
+    storage!.setBool("impairedMode", _impairedMode);
+    storage?.setBool("isDark", _isDark);
+    storage?.setBool("isSystem", _systemMode);
+    storage?.setBool("imageVisibility", _imageVisibility);
+    storage?.setString("headingColor", _headingColor ?? "");
+    storage?.setString("textColor", _textColor ?? "");
+    storage?.setDouble("lineHeight", _lineHeight);
+    storage!.setDouble("letterSpacing", _letterSpacing);
+    storage?.setBool("monochrome", _monochrome);
     notifyListeners();
   }
 }
