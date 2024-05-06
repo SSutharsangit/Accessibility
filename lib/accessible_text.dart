@@ -8,12 +8,6 @@ class AccessibleText extends StatelessWidget {
 
   const AccessibleText(this.data, {super.key, this.style});
 
-  final double minFontSize = 12.0;
-
-  final double maxFontSize = 20.0;
-  final double minLineSpace = 0.5;
-  final double maxLineSpace = 3.0;
-
   @override
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
@@ -39,16 +33,13 @@ class AccessibleText extends StatelessWidget {
         backgroundColor:
             style?.backgroundColor ?? accessibilitySettings.textBgColor,
         fontSize: ((style?.fontSize ?? 0) *
-                    accessibilitySettings.textScaleFactor *
-                    (accessibilitySettings.impairedMode ? 1.2 : 1))
-                .clamp(minFontSize, maxFontSize) ??
+                accessibilitySettings.textScaleFactor *
+                (accessibilitySettings.impairedMode ? 1.2 : 1)) ??
             (accessibilitySettings.currentFontSize *
-                    accessibilitySettings.textScaleFactor *
-                    (accessibilitySettings.impairedMode ? 1.2 : 1))
-                .clamp(minFontSize, maxFontSize),
+                accessibilitySettings.textScaleFactor *
+                (accessibilitySettings.impairedMode ? 1.2 : 1)),
         color: finalColor,
-        height:
-            accessibilitySettings.lineHeight.clamp(minLineSpace, maxLineSpace),
+        height: accessibilitySettings.lineHeight,
         letterSpacing: accessibilitySettings.letterSpacing,
       ),
     );

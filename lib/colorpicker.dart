@@ -40,7 +40,6 @@ class _ColorPickerIconButtonState extends State<ColorPickerIconButton> {
                       selectedColor = color;
                     });
                   },
-                  showLabel: true,
                   pickerAreaHeightPercent: 0.8,
                 ),
               ),

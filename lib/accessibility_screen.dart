@@ -58,20 +58,17 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           ListTile(
             title: AccessibleHeadingText(
-                accessibilitySettings.colorBlindMode
-                    ? 'light mode'
-                    : 'Dark mode',
+                accessibilitySettings.isDark ? 'light mode' : 'Dark mode',
                 style: const TextStyle(
                     fontSize: 17.0,
                     color: Colors.red,
                     fontWeight: FontWeight.bold)),
             trailing: Switch(
               value: accessibilitySettings.isDark,
-              onChanged:
-                  ((accessibilitySettings.monochrome == MonochromeMode.off) &&
-                          accessibilitySettings.systemMode == false)
-                      ? (value) => accessibilitySettings.changeTheme()
-                      : null,
+              onChanged: ((accessibilitySettings.monochrome == false) &&
+                      accessibilitySettings.systemMode == false)
+                  ? (value) => accessibilitySettings.changeTheme()
+                  : null,
             ),
           ),
           ListTile(
@@ -93,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
             trailing: Switch(
               value: accessibilitySettings.systemMode,
               onChanged: ((accessibilitySettings.isDark == false) &&
-                      (accessibilitySettings.monochrome == MonochromeMode.off))
+                      (accessibilitySettings.monochrome == false))
                   ? (value) => accessibilitySettings.toggleSystem()
                   : null
               // _updateTheme(context);
@@ -107,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 17.0),
             ),
             trailing: Switch(
-              value: accessibilitySettings.monochrome == MonochromeMode.on,
+              value: accessibilitySettings.monochrome == true,
               onChanged: (value) {
                 accessibilitySettings.toggleMonochrome();
                 // _updateTheme(context);
@@ -198,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    accessibilitySettings.increaseFontSize();
+                    accessibilitySettings.increaseLineHeight();
                   },
                 ),
               ],
@@ -351,45 +348,45 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          ListTile(
-            title: const AccessibleHeadingText(' Scalfold BackgroundColor: ',
-                style: TextStyle(fontSize: 15.0)),
-            subtitle: const AccessibleText('Change  BackgroundColor',
-                style: TextStyle(
-                  fontSize: 14.0,
-                )),
-            trailing: SizedBox(
-              width: 150.0,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.color_lens, color: Colors.red),
-                    onPressed: () {
-                      accessibilitySettings.setScalfoldColor(Colors.red);
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.color_lens, color: Colors.green),
-                    onPressed: () {
-                      accessibilitySettings.setScalfoldColor(Colors.green);
-                    },
-                  ),
-                  ColorPickerIconButton(
-                    key: UniqueKey(),
-                    title: "background",
-                    onPressed: (Color selectedColor, String background) {
-                      // Your onPressed callback logic here
-                      accessibilitySettings.setScalfoldColor(selectedColor);
-                    },
-                  )
-                ],
-              ),
-            ),
-          ),
+          // const SizedBox(
+          //   height: 15,
+          // ),
+          // ListTile(
+          //   title: const AccessibleHeadingText(' Scalfold BackgroundColor: ',
+          //       style: TextStyle(fontSize: 15.0)),
+          //   subtitle: const AccessibleText('Change  BackgroundColor',
+          //       style: TextStyle(
+          //         fontSize: 14.0,
+          //       )),
+          //   trailing: SizedBox(
+          //     width: 150.0,
+          //     child: Row(
+          //       mainAxisSize: MainAxisSize.min,
+          //       children: [
+          //         IconButton(
+          //           icon: const Icon(Icons.color_lens, color: Colors.red),
+          //           onPressed: () {
+          //             accessibilitySettings.setScalfoldColor(Colors.red);
+          //           },
+          //         ),
+          //         IconButton(
+          //           icon: const Icon(Icons.color_lens, color: Colors.green),
+          //           onPressed: () {
+          //             accessibilitySettings.setScalfoldColor(Colors.green);
+          //           },
+          //         ),
+          //         ColorPickerIconButton(
+          //           key: UniqueKey(),
+          //           title: "background",
+          //           onPressed: (Color selectedColor, String background) {
+          //             // Your onPressed callback logic here
+          //             accessibilitySettings.setScalfoldColor(selectedColor);
+          //           },
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
           const SizedBox(
             height: 15,
           ),
@@ -448,7 +445,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 accessibilitySettings.reset();
               },
-              child: const AccessibleText("Reset"))
+              child: const Text("Reset"))
         ],
       ),
     );

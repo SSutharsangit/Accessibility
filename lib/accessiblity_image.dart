@@ -21,25 +21,23 @@ class AccessibilityImage extends StatelessWidget {
     this.color,
     this.colorBlendMode,
     this.filterQuality = FilterQuality.low,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final accessibilitySettings = context.watch<AccessibilityFeatures>();
     return Visibility(
       visible: accessibilitySettings.imageVisibility,
-      child: Container(
-        child: Image(
-          image: image,
-          width: width,
-          height: height,
-          fit: fit,
-          alignment: alignment,
-          color: accessibilitySettings.imageColor,
-          colorBlendMode: colorBlendMode,
-          filterQuality: filterQuality,
-        ),
+      child: Image(
+        image: image,
+        width: width,
+        height: height,
+        fit: fit,
+        alignment: alignment,
+        color: accessibilitySettings.imageColor,
+        colorBlendMode: colorBlendMode,
+        filterQuality: filterQuality,
       ),
     );
   }
